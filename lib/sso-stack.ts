@@ -43,6 +43,11 @@ export class SsoStack extends cdk.Stack {
             ],
             resources: ["*"],
         });
+
+        const cloudFrontFullAccess = new iam.PolicyStatement({
+            actions: ["cloudfront:*"],
+            resources: ["*"],
+        });
         /**
          * lambda and api for techsee get admin config
          */
@@ -82,6 +87,7 @@ export class SsoStack extends cdk.Stack {
                     connectPermissionsForLambda,
                     ssoPermissionsForLambda,
                     s3PermissionsForLambda,
+                    cloudFrontFullAccess
                 ],
             })
         );

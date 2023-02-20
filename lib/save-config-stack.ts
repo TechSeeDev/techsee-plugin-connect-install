@@ -18,6 +18,10 @@ export class SaveConfigStack extends cdk.Stack {
             actions: ["s3:ListAllMyBuckets", "s3:*Object"],
             resources: ["arn:aws:s3:::*"],
         });
+        const cloudFrontFullAccess = new iam.PolicyStatement({
+            actions: ["cloudfront:*"],
+            resources: ["*"],
+        });
 
         ///////////////////////////////////////////////////////////////////////////////
 
@@ -41,7 +45,7 @@ export class SaveConfigStack extends cdk.Stack {
 
         tscc_activation_lambda.role?.attachInlinePolicy(
             new iam.Policy(this, ResourcesName.S3_ACTIVATION_POLICY, {
-                statements: [s3PermissionsForLambda],
+                statements: [s3PermissionsForLambda, cloudFrontFullAccess],
             })
         );
 
@@ -86,7 +90,7 @@ export class SaveConfigStack extends cdk.Stack {
 
         tscc_povisioning_lambda.role?.attachInlinePolicy(
             new iam.Policy(this, ResourcesName.S3_PROVISIONING_POLICY, {
-                statements: [s3PermissionsForLambda],
+                statements: [s3PermissionsForLambda, cloudFrontFullAccess],
             })
         );
 
