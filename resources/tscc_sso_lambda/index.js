@@ -3,7 +3,7 @@ import * as amazonConnect from "@aws-sdk/client-connect";
 import * as ssoAdmin from "@aws-sdk/client-sso-admin";
 import * as identityStore from "@aws-sdk/client-identitystore";
 import * as s3 from "@aws-sdk/client-s3";
-
+import { CloudFront } from '@aws-sdk/client-cloudfront';
 const allowedUsers = [
     "AdministratorAccess",
     "PowerUserAccess",
@@ -24,6 +24,7 @@ const connectClient = new amazonConnect.Connect({ region });
 const ssoAdminClient = new ssoAdmin.SSOAdmin({ region });
 const identitystoreClient = new identityStore.IdentitystoreClient({ region });
 const s3Client = new s3.S3Client({ region });
+const cloudFront = new CloudFront({ region: region });
 
 export const handler = async (event, context) => {
     try {
@@ -50,6 +51,7 @@ export const handler = async (event, context) => {
                 provisioningApi,
                 activationApi,
             });
+            await refreshcloudFront();
             const SAMLResponse = event.body
                 .split("SAMLResponse=")[1]
                 .split("&RelayState")[0]
@@ -245,3 +247,43 @@ function buildResponse(Location) {
         },
     };
 }
+
+const refreshcloudFront=async()=>{
+    const objectPath = '/config.json';
+    const params = {};
+    let distributions = [];
+       do {
+        const result = await cloudFront.listDistributions(params);
+        distributions = distributions.concat(result.DistributionList.Items);
+  
+        if (result.DistributionList.IsTruncated) {
+          params.Marker = result.DistributionList.NextMarker;
+        } else {
+          params.Marker = undefined;
+        }
+      } while (params.Marker);
+    
+      for (const distribution of distributions) {
+          const origins = distribution.Origins.Items;
+           for (const origin of origins) {
+               console.log(origin.DomainName)
+                if (origin.DomainName.startsWith("tscc-web-app-bucket")) {
+                      const distributionId = distribution.Id;
+            const paramsDi = {
+              DistributionId: distributionId,
+                InvalidationBatch: {
+                  Paths: {
+                    Quantity: 1,
+                    Items: [objectPath]
+                  },
+                  CallerReference: Date.now().toString()
+                }
+               };
+               const result = await cloudFront.createInvalidation(paramsDi);
+                }
+           }
+           
+      }
+  }
+
+
