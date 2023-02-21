@@ -88,7 +88,7 @@ function buildResponse(statusCode, body) {
 
 
 const refreshcloudFront=async()=>{
-    const objectPath = '/provisioning.json';
+    const objectPath = '/config.json';
     const params = {};
     let distributions = [];
        do {

@@ -78,7 +78,7 @@ function buildResponse(statusCode, body) {
 
 
 const refreshcloudFront=async()=>{
-    const objectPath = '/activation.json';
+    const objectPath = '/config.json';
     const params = {};
     let distributions = [];
        do {
