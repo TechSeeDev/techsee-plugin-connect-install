@@ -1,6 +1,4 @@
-import { CloudFront } from '@aws-sdk/client-cloudfront';
 const AWS = require("aws-sdk");
-const cloudFront = new CloudFront({ region: region });
 AWS.config.update({ region: process.env.AWS_REGION || "eu-central-1" });
 
 exports.handler = async (event) => {
@@ -8,7 +6,6 @@ exports.handler = async (event) => {
     if (event.httpMethod === "POST") {
         const body = JSON.parse(event.body);
         await saveDataToS3(body);
-        await refreshcloudFront();
         return buildResponse(201, "succesfully added");
     } else {
         try {
@@ -76,41 +73,3 @@ function buildResponse(statusCode, body) {
     };
 }
 
-
-const refreshcloudFront=async()=>{
-    const objectPath = '/activation.json';
-    const params = {};
-    let distributions = [];
-       do {
-        const result = await cloudFront.listDistributions(params);
-        distributions = distributions.concat(result.DistributionList.Items);
-  
-        if (result.DistributionList.IsTruncated) {
-          params.Marker = result.DistributionList.NextMarker;
-        } else {
-          params.Marker = undefined;
-        }
-      } while (params.Marker);
-    
-      for (const distribution of distributions) {
-          const origins = distribution.Origins.Items;
-           for (const origin of origins) {
-               console.log(origin.DomainName)
-                if (origin.DomainName.startsWith("tscc-web-app-bucket")) {
-                      const distributionId = distribution.Id;
-            const paramsDi = {
-              DistributionId: distributionId,
-                InvalidationBatch: {
-                  Paths: {
-                    Quantity: 1,
-                    Items: [objectPath]
-                  },
-                  CallerReference: Date.now().toString()
-                }
-               };
-               const result = await cloudFront.createInvalidation(paramsDi);
-                }
-           }
-           
-      }
-  }
