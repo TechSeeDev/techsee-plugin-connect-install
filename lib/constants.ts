@@ -15,6 +15,7 @@ const ResourceName = {
     WEB_APP_STACK: "tscc-web-app-stack",
     CONFIG_STACK: "tscc-config-stack",
     SSO_STACK: "tscc-sso-stack",
+    S3_CLOUDFRONT_STACK: "tscc-s3cloudFront-stack"
 };
 
 export default ResourceName;

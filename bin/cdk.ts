@@ -5,6 +5,7 @@ import { SaveConfigStack } from "../lib/save-config-stack";
 import { WepAppStack } from "../lib/web-app-stack";
 import ResourceName from "../lib/constants";
 import { SsoStack } from "../lib/sso-stack";
+import { S3ToCloudFrontStack } from "../lib/s3-cloudFront-stack";
 
 const app = new cdk.App();
 // stack 1
@@ -19,4 +20,11 @@ new SsoStack(app, ResourceName.SSO_STACK, {
     tscc_activation_api_url: saveConfigStack.tscc_activation_api_url,
     distributionDomainName: wepAppStack.distributionDomainName,
     bucketName: wepAppStack.Bucket
+});
+
+
+new S3ToCloudFrontStack(app, ResourceName.S3_CLOUDFRONT_STACK, {
+    distribution_Id: wepAppStack.distributionId,
+    domain_name: wepAppStack.distributionDomainName,
+    bucket_name: wepAppStack.Bucket
 });

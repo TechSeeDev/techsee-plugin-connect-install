@@ -14,6 +14,7 @@ interface WepAppStackProps extends cdk.StackProps {
 
 export class WepAppStack extends cdk.Stack {
     distributionDomainName: string;
+    distributionId: string;
     Bucket: string = bucketName;
     constructor(scope: Construct, id: string, props?: WepAppStackProps) {
         super(scope, id, props);
@@ -49,5 +50,7 @@ export class WepAppStack extends cdk.Stack {
             }
         );
         this.distributionDomainName = cf.distributionDomainName;
+        this.distributionId=cf.distributionId;
+
     }
 }
