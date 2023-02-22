@@ -3,13 +3,14 @@ import * as amazonConnect from "@aws-sdk/client-connect";
 import * as ssoAdmin from "@aws-sdk/client-sso-admin";
 import * as identityStore from "@aws-sdk/client-identitystore";
 import * as s3 from "@aws-sdk/client-s3";
+import { CloudFront } from '@aws-sdk/client-cloudfront';
 const allowedUsers = [
     "AdministratorAccess",
     "PowerUserAccess",
     "SystemAdministrator",
 ];
 
-const { entryPoint, clientLocation, cert, activationApi, provisioningApi } =
+const { entryPoint, clientLocation, cert, activationApi, provisioningApi,CLOUDFRONT_DISTRIBUTION_ID } =
     process.env;
 const region = process.env.AWS_REGION || "eu-central-1";
 const issuer = "techsee-cloud-connect";
@@ -23,6 +24,7 @@ const connectClient = new amazonConnect.Connect({ region });
 const ssoAdminClient = new ssoAdmin.SSOAdmin({ region });
 const identitystoreClient = new identityStore.IdentitystoreClient({ region });
 const s3Client = new s3.S3Client({ region });
+const cloudFront = new CloudFront({ region: region });
 
 export const handler = async (event, context) => {
     try {
@@ -49,6 +51,10 @@ export const handler = async (event, context) => {
                 provisioningApi,
                 activationApi,
             });
+
+           const file="/config.json";
+           await  refreshcloudFront(file,CLOUDFRONT_DISTRIBUTION_ID)
+
             const SAMLResponse = event.body
                 .split("SAMLResponse=")[1]
                 .split("&RelayState")[0]
@@ -104,7 +110,20 @@ const saveDataToS3 = async (data) => {
     const res = await s3Client.send(command);
     return res;
 };
-
+const refreshcloudFront=async(objectPath,distributionId)=>{
+    const params = {
+      DistributionId: distributionId,
+        InvalidationBatch: {
+          Paths: {
+            Quantity: 1,
+            Items: [objectPath]
+          },
+          CallerReference: Date.now().toString()
+        }
+       };
+       const result = await cloudFront.createInvalidation(params);
+       console.log(result)
+  }
 const getConnectInstances = async () => {
     const command = new amazonConnect.ListInstancesCommand({ NextToken: "" });
     const data = await connectClient.send(command);

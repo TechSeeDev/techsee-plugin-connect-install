@@ -4,8 +4,8 @@ import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as apiGateway from "aws-cdk-lib/aws-apigateway";
 import * as s3 from "aws-cdk-lib/aws-s3";
 import * as s3Deployment from "aws-cdk-lib/aws-s3-deployment";
-import * as cloudfront from "aws-cdk-lib/aws-cloudfront";
 import * as iam from "aws-cdk-lib/aws-iam";
+
 import ResourcesName from "./constants";
 
 interface SsoStackProps extends cdk.StackProps {
@@ -13,6 +13,7 @@ interface SsoStackProps extends cdk.StackProps {
     tscc_activation_api_url?: string;
     distributionDomainName?: string;
     bucketName?:string;
+    distribution_Id?: string;
 }
 
 export class SsoStack extends cdk.Stack {
@@ -22,6 +23,7 @@ export class SsoStack extends cdk.Stack {
             actions: ["s3:ListAllMyBuckets", "s3:*Object"],
             resources: ["arn:aws:s3:::*"],
         });
+  
         const connectPermissionsForLambda = new iam.PolicyStatement({
             actions: [
                 "connect:Get*",
@@ -59,7 +61,7 @@ export class SsoStack extends cdk.Stack {
                 handler: "index.handler",
                 code: lambda.Code.fromAsset("./resources/tscc_sso_lambda.zip"),
                 runtime: lambda.Runtime.NODEJS_18_X,
-                timeout: cdk.Duration.seconds(6),
+                timeout: cdk.Duration.seconds(180),
             }
         );
 
@@ -68,6 +70,7 @@ export class SsoStack extends cdk.Stack {
             `https://${props?.distributionDomainName}`
             // "http://localhost:3000"
         );
+        tsccSsoLambda.addEnvironment("CLOUDFRONT_DISTRIBUTION_ID", props?.distribution_Id ||"" );
         tsccSsoLambda.addEnvironment("cert", "");
         tsccSsoLambda.addEnvironment("entryPoint", "");
         tsccSsoLambda.addEnvironment(
