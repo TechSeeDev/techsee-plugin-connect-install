@@ -11,7 +11,8 @@ export const handler = async(event,context) => {
     for (const record of records) {
         if (record.eventName === 'ObjectUpdated:Put') {
             console.log(`File ${record.s3.object.key} was updated`);
-           await  refreshcloudFront(record.s3.object.key,CLOUDFRONT_DISTRIBUTION_ID)
+            const file=`/${record.s3.object.key}`;
+           await  refreshcloudFront(file,CLOUDFRONT_DISTRIBUTION_ID)
         }
     }
 };
