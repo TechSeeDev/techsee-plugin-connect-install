@@ -1,3 +1,5 @@
+/// <reference types="node" />
+
 import * as apigw from 'aws-cdk-lib/aws-apigateway';
 import * as iam from 'aws-cdk-lib/aws-iam';
 import * as cdk from "aws-cdk-lib";
@@ -99,8 +101,10 @@ export class S3RestApiStack extends cdk.Stack {
 
 
 
-      const fileContentArray = `{api: '${api.url}/file'}`;
-
+      const techseeContent = { "api": api.url };
+      
+      const jsonData = JSON.stringify(techseeContent);
+      const jsonBuffer = Buffer.from(jsonData);
 
              // Create a custom resource to update the S3 file
     const updateS3Filetechsee = new cr.AwsCustomResource(this, ResourcesName.API_S3_CUSTOMRE_SOURCE, {
@@ -110,7 +114,7 @@ export class S3RestApiStack extends cdk.Stack {
           parameters: {
             Bucket: bucket.bucketName,
             Key: 'techsee.json',
-            Body: fileContentArray,
+            Body: jsonBuffer.toString(),
           },
           physicalResourceId: cr.PhysicalResourceId.of(ResourcesName.API_S3_CUSTOMRE_SOURCE),
         },
@@ -123,9 +127,15 @@ export class S3RestApiStack extends cdk.Stack {
         ]),
       });
 
-      const configContent = `{ssoApi: '${props?.tscc_sso_api_url}',activationApi:'${props?.tscc_activation_api_url}',provisioningApi: '${props?.tscc_provisioning_api_url}'}`;
+      const configContent = {
+        "ssoApi": props?.tscc_sso_api_url,
+        "activationApi": props?.tscc_activation_api_url,
+        "provisioningApi": props?.tscc_provisioning_api_url
+    };
 
     
+    const jsonconfig = JSON.stringify(configContent);
+    const jsonBufferconfig = Buffer.from(jsonconfig);
 
       const updateS3File = new cr.AwsCustomResource(this, ResourcesName.API_S3_CUSTOMRE_SOURCE_CONFIG, {
         onCreate: {
@@ -134,7 +144,7 @@ export class S3RestApiStack extends cdk.Stack {
           parameters: {
             Bucket: bucket.bucketName,
             Key: 'config.json',
-            Body: configContent,
+            Body: jsonBufferconfig.toString(),
           },
           physicalResourceId: cr.PhysicalResourceId.of(ResourcesName.API_S3_CUSTOMRE_SOURCE_CONFIG),
         },
