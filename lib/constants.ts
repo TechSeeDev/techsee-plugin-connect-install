@@ -21,7 +21,7 @@ const ResourceName = {
     API_S3: "tscc-api-s3",
     API_S3_ROLE: "tscc-api-role",
     API_S3_Deployment: "tscc-api-deployment",
-    API_S3_Stage: "tscc-api-stage-Deployment",
+    API_S3_Stage: "tscc-stage-Deployment",
     API_S3_CUSTOMRE_SOURCE: "tscc-s3-UpdateS3File-techsee",
     API_S3_CUSTOMRE_SOURCE_CONFIG: "tscc-s3-UpdateS3File-config",
 
