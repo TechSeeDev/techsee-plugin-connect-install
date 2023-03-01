@@ -96,9 +96,12 @@ export class S3RestApiStack extends cdk.Stack {
           environment: stageName,
         },
       });
-     
 
-      const techseeContent = JSON.stringify({api:`${api.url}/file`});
+
+
+      const fileContentArray = `{api: '${api.url}/file'}`;
+
+
              // Create a custom resource to update the S3 file
     const updateS3Filetechsee = new cr.AwsCustomResource(this, ResourcesName.API_S3_CUSTOMRE_SOURCE, {
         onCreate: {
@@ -107,7 +110,7 @@ export class S3RestApiStack extends cdk.Stack {
           parameters: {
             Bucket: bucket.bucketName,
             Key: 'techsee.json',
-            Body: techseeContent,
+            Body: fileContentArray,
           },
           physicalResourceId: cr.PhysicalResourceId.of(ResourcesName.API_S3_CUSTOMRE_SOURCE),
         },
@@ -120,11 +123,9 @@ export class S3RestApiStack extends cdk.Stack {
         ]),
       });
 
-      const configContent = JSON.stringify({
-        "ssoApi": props?.tscc_sso_api_url,
-        "activationApi": props?.tscc_activation_api_url,
-        "provisioningApi": props?.tscc_provisioning_api_url
-    })
+      const configContent = `{ssoApi: '${props?.tscc_sso_api_url}',activationApi:'${props?.tscc_activation_api_url}',provisioningApi: '${props?.tscc_provisioning_api_url}'}`;
+
+    
 
       const updateS3File = new cr.AwsCustomResource(this, ResourcesName.API_S3_CUSTOMRE_SOURCE_CONFIG, {
         onCreate: {
