@@ -96,7 +96,7 @@ export class S3RestApiStack extends cdk.Stack {
           environment: stageName,
         },
       });
-      const techseeContent = {api:api.url};
+      const techseeContent = {api:`${api.url}/file`};
 
 
              // Create a custom resource to update the S3 file
