@@ -15,7 +15,20 @@ const ResourceName = {
     WEB_APP_STACK: "tscc-web-app-stack",
     CONFIG_STACK: "tscc-config-stack",
     SSO_STACK: "tscc-sso-stack",
-    S3_CLOUDFRONT_STACK: "tscc-s3cloudFront-stack"
+    API_S3_STACK: "tscc-api-s3-stack",
+    S3_CLOUDFRONT_STACK: "tscc-s3cloudFront-stack",
+    API_POLICY: "tscc-api-policy",
+    API_S3: "tscc-api-s3",
+    API_S3_ROLE: "tscc-api-role",
+    API_S3_Deployment: "tscc-api-Deployment",
+    API_S3_Stage: "tscc-api-Stage",
+    API_S3_CUSTOMRE_SOURCE: "tscc-s3-UpdateS3File-techsee",
+    API_S3_CUSTOMRE_SOURCE_CONFIG: "tscc-s3-UpdateS3File-config",
+
+
+
+
+
 };
 
 export default ResourceName;

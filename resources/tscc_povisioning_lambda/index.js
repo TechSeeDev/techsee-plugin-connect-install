@@ -7,7 +7,6 @@ exports.handler = async (event) => {
             const body = JSON.parse(event.body);
             if (body["delete"]) {
                 await saveDataToS3({});
-                await refreshcloudFront();
                 return buildResponse(200, JSON.stringify({}));
             } else {
                 await saveDataToS3(body);

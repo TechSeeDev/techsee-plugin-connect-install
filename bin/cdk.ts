@@ -6,6 +6,7 @@ import { WepAppStack } from "../lib/web-app-stack";
 import ResourceName from "../lib/constants";
 import { SsoStack } from "../lib/sso-stack";
 import { S3ToCloudFrontStack } from "../lib/s3-cloudFront-stack";
+import { S3RestApiStack } from "../lib/api-with-s3";
 
 const app = new cdk.App();
 // stack 1
@@ -15,14 +16,20 @@ const saveConfigStack = new SaveConfigStack(app, ResourceName.CONFIG_STACK, {});
 const wepAppStack = new WepAppStack(app, ResourceName.WEB_APP_STACK, {});
 
 // stack 3
-new SsoStack(app, ResourceName.SSO_STACK, {
+ const ssoStack=  new SsoStack(app, ResourceName.SSO_STACK, {
     tscc_provisioning_api_url: saveConfigStack.tscc_provisioning_api_url,
     tscc_activation_api_url: saveConfigStack.tscc_activation_api_url,
     distributionDomainName: wepAppStack.distributionDomainName,
-    bucketName: wepAppStack.Bucket,
-    distribution_Id: wepAppStack.distributionId,
+    bucketName: wepAppStack.Bucket
 });
 
+
+new S3RestApiStack(app,ResourceName.API_S3_STACK,{
+    tscc_provisioning_api_url: saveConfigStack.tscc_provisioning_api_url,
+    tscc_activation_api_url: saveConfigStack.tscc_activation_api_url,
+    tscc_sso_api_url:ssoStack.tscc_sso_api_url,
+    bucket_name: wepAppStack.Bucket
+})
 // stack 4 remove S3ToCloudFrontStack lamda 
 // new S3ToCloudFrontStack(app, ResourceName.S3_CLOUDFRONT_STACK, {
 //     distribution_Id: wepAppStack.distributionId,

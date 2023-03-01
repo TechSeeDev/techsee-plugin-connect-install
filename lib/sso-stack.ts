@@ -13,10 +13,11 @@ interface SsoStackProps extends cdk.StackProps {
     tscc_activation_api_url?: string;
     distributionDomainName?: string;
     bucketName?:string;
-    distribution_Id?: string;
 }
 
 export class SsoStack extends cdk.Stack {
+    tscc_sso_api_url: string;
+
     constructor(scope: Construct, id: string, props?: SsoStackProps) {
         super(scope, id, props);
         const s3PermissionsForLambda = new iam.PolicyStatement({
@@ -70,7 +71,6 @@ export class SsoStack extends cdk.Stack {
             `https://${props?.distributionDomainName}`
             // "http://localhost:3000"
         );
-        tsccSsoLambda.addEnvironment("CLOUDFRONT_DISTRIBUTION_ID", props?.distribution_Id ||"" );
         tsccSsoLambda.addEnvironment("cert", "");
         tsccSsoLambda.addEnvironment("entryPoint", "");
         tsccSsoLambda.addEnvironment(
@@ -111,5 +111,7 @@ export class SsoStack extends cdk.Stack {
         );
         tsccSsoConfigApi.root.addMethod("GET");
         tsccSsoConfigApi.root.addMethod("POST");
+        this.tscc_sso_api_url = tsccSsoConfigApi.url;
+
     }
 }
