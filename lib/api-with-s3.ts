@@ -87,7 +87,7 @@ export class S3RestApiStack extends cdk.Stack {
         api: api,
       });
       
-      const stageName = 'prod';
+      const stageName = 'prod-api-s3';
       
       new apigw.Stage(this, ResourcesName.API_S3_Stage, {
         deployment: deployment,
