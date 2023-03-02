@@ -101,7 +101,7 @@ export class S3RestApiStack extends cdk.Stack {
 
 
 
-      const techseeContent = { "api": api.url };
+      const techseeContent = { "api": `${api.url}file` };
       
       const jsonData = JSON.stringify(techseeContent);
       const jsonBuffer = Buffer.from(jsonData);
