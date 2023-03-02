@@ -51,6 +51,11 @@ export class S3RestApiStack extends cdk.Stack {
          integrationResponses: [
            {
              statusCode: '200',
+             responseParameters: {
+              "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+              "method.response.header.Access-Control-Allow-Methods": "'GET,POST,OPTIONS'",
+              "method.response.header.Access-Control-Allow-Origin": "'*'"
+            },
              responseTemplates: {
                'application/json': '$input.body'
              }
@@ -68,20 +73,33 @@ export class S3RestApiStack extends cdk.Stack {
 
 
      fileResource.addMethod('GET', integration, {
+      
         methodResponses: [
           {
             statusCode: '200',
+            responseParameters: {
+              'method.response.header.Access-Control-Allow-Headers': true,
+              'method.response.header.Access-Control-Allow-Methods': true,
+              'method.response.header.Access-Control-Allow-Origin': true
+            },
             responseModels: {
               'application/json': apigw.Model.EMPTY_MODEL
             }
           },
           {
             statusCode: '400',
+            responseParameters: {
+              'method.response.header.Access-Control-Allow-Headers': true,
+              'method.response.header.Access-Control-Allow-Methods': true,
+              'method.response.header.Access-Control-Allow-Origin': true
+            },
             responseModels: {
               'application/json': apigw.Model.EMPTY_MODEL
             }
           }
         ]
+     
+   
     }
       );
 

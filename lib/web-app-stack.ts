@@ -24,6 +24,8 @@ export class WepAppStack extends cdk.Stack {
         const tscc_web_app_bucket = new s3.Bucket(this, bucketName, {
             publicReadAccess: true,
             bucketName: bucketName,
+            websiteIndexDocument: 'index.html',
+            websiteErrorDocument: 'index.html',
             removalPolicy: cdk.RemovalPolicy.DESTROY,
             autoDeleteObjects: true,
         });
@@ -47,6 +49,15 @@ export class WepAppStack extends cdk.Stack {
                     },
                 ],
                 defaultRootObject: "index.html",
+                errorConfigurations: [{
+                    errorCode: 404,
+                    responsePagePath: "/index.html",
+                    responseCode: 200
+                  }, {
+                    errorCode: 403,
+                    responsePagePath: "/index.html",
+                    responseCode: 200
+                  }],
             }
         );
         this.distributionDomainName = cf.distributionDomainName;
