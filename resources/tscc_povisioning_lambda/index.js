@@ -13,7 +13,7 @@ exports.handler = async (event) => {
                 const configData= {...configJoon,connectInstances:body.connectInstances}
                 
                 await saveDataConfigToS3(configData);
-
+                delete body.connectInstances;
                 await saveDataToS3(body);
                 const data = await getDataFromS3();
                 return buildResponse(201, JSON.stringify(data));
