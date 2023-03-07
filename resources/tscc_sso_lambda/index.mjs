@@ -44,11 +44,14 @@ export const handler = async (event, context) => {
                 issuer,
                 entryPoint,
             });
-            await saveDataToS3({
-                ssoApi: callbackUrl,
+
+            const configData= await getDataConfigFromS3();
+            
+            const payload={...configData, ssoApi: callbackUrl,
                 provisioningApi,
-                activationApi,
-            });
+                activationApi}
+                
+            await saveDataToS3(payload);
 
             const SAMLResponse = event.body
                 .split("SAMLResponse=")[1]
@@ -235,7 +238,26 @@ const checkAdmin = (userId) => {
         }
     });
 };
+const getDataConfigFromS3 = async () => {
+    try {
+            const s3Params = {
+                Bucket: process.env.bucket || "tscc-frontend",
+                Key: "config.json"
+              };
 
+            const data = await s3Client.send(new GetObjectCommand(s3Params));
+
+            const str = await data.Body.transformToString();
+
+            const jsonData = JSON.parse(str.toString());            
+             
+        return jsonData;
+
+    } catch (e) {
+        console.log("catch",e)
+        return {};
+    }
+};
 function buildResponse(Location) {
     return {
         statusCode: 302,
