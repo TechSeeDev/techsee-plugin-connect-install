@@ -51,7 +51,7 @@ export const handler = async (event, context) => {
                 provisioningApi,
                 activationApi}
                 
-            await saveDataToS3(payload);
+            // await saveDataToS3(payload);
 
             const SAMLResponse = event.body
                 .split("SAMLResponse=")[1]
