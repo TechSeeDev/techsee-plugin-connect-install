@@ -45,7 +45,7 @@ const saveDataToS3 = async (data) => {
     return new Promise((res, rej) => {
         s3.upload(bucketData, function (err, data) {
             if (err) {
-                console.log(err);
+                // console.log(err);
                 rej("Error uploading data: ", data);
             } else {
                 res("succesfully uploaded!!!");
@@ -92,7 +92,7 @@ const saveDataConfigToS3 = async (data) => {
     return new Promise((res, rej) => {
         s3.upload(bucketData, function (err, data) {
             if (err) {
-                console.log(err);
+                // console.log(err);
                 rej("Error uploading data: ", data);
             } else {
                 res("succesfully uploaded!!!");

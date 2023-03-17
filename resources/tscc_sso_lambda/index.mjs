@@ -81,11 +81,11 @@ export const handler = async (event, context) => {
             const response = buildResponse(
                 `${clientLocation}/?user=${encryptUser}&connectInstances=${instancesData}`
             );
-            console.log({ response });
+            // console.log({ response });
             return response;
         }
     } catch (e) {
-        console.log(e);
+        // console.log(e);
         return {
             statusCode: 500,
         };
@@ -233,7 +233,7 @@ const checkAdmin = (userId) => {
                 }
             }
         } catch (err) {
-            console.log(err);
+            // console.log(err);
             rej(err.message);
         }
     });
@@ -254,7 +254,7 @@ const getDataConfigFromS3 = async () => {
         return jsonData;
 
     } catch (e) {
-        console.log("catch",e)
+        // console.log("catch",e)
         return {};
     }
 };
