@@ -23,8 +23,6 @@ export class SaveConfigStack extends cdk.Stack {
             resources: ["*"],
         });
 
-        ///////////////////////////////////////////////////////////////////////////////
-
         /*
             lambda and api for techsee activation
         */
@@ -67,8 +65,6 @@ export class SaveConfigStack extends cdk.Stack {
         tscc_activation_api.root.addMethod("POST");
 
         // this.tscc_activation_api_url = tscc_activation_api.url;
-
-        /////////////////////////////////////////////////////////////////////////////
 
         /*
             lambda and api for techsee provisioning
@@ -113,11 +109,9 @@ export class SaveConfigStack extends cdk.Stack {
 
         this.tscc_activation_api_url = tscc_activation_api.url;
         this.tscc_provisioning_api_url = tscc_povisioning_api.url;
-        // this.tscc_provisioning_api_url = tscc_povisioning_api.url;
         new cdk.CfnOutput(this, "provisioiningApiUrl", {
             value: "tscc_activation_api.url",
             exportName: "testExport",
         });
-        ///////////////////////////////////////////////////////////////////////////////
     }
 }

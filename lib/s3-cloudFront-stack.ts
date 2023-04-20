@@ -47,20 +47,6 @@ const distribution = cloudfront.CloudFrontWebDistribution.fromDistributionAttrib
       s3.EventType.OBJECT_CREATED_PUT,
       new s3n.LambdaDestination(func)
     );
-    // const rule = new events.Rule(this, 'MyRule', {
-    //   eventPattern: {
-    //     source: ['aws.s3'],
-    //     detailType: ['AWS API Call via CloudTrail'],
-    //     detail: {
-    //       eventSource: ['s3.amazonaws.com'],
-    //       eventName: ['PutObject'],
-    //       requestParameters: {
-    //         bucketName: [props?.bucket_name],
-    //       },
-    //     },
-    //   },
-    // });
-    // rule.addTarget(new targets.LambdaFunction(func));
 
     // Allow the Lambda function to invalidate the CloudFront distribution
     distribution.grantCreateInvalidation(func);

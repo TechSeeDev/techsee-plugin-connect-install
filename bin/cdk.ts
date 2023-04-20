@@ -30,9 +30,3 @@ new S3RestApiStack(app,ResourceName.API_S3_STACK,{
     tscc_sso_api_url:ssoStack.tscc_sso_api_url,
     bucket_name: wepAppStack.Bucket
 })
-// stack 4 remove S3ToCloudFrontStack lamda 
-// new S3ToCloudFrontStack(app, ResourceName.S3_CLOUDFRONT_STACK, {
-//     distribution_Id: wepAppStack.distributionId,
-//     domain_name: wepAppStack.distributionDomainName,
-//     bucket_name: wepAppStack.Bucket
-// });

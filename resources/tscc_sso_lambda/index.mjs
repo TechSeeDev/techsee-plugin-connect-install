@@ -81,11 +81,9 @@ export const handler = async (event, context) => {
             const response = buildResponse(
                 `${clientLocation}/?user=${encryptUser}&connectInstances=${instancesData}`
             );
-            // console.log({ response });
             return response;
         }
     } catch (e) {
-        // console.log(e);
         return {
             statusCode: 500,
         };
@@ -102,7 +100,6 @@ const saveDataToS3 = async (data) => {
         Body: buf,
         ContentEncoding: "utf-8",
         ContentType: "application/json",
-        // ACL: 'public-read'
     };
     const command = new s3.UploadPartCommand(bucketData);
     const res = await s3Client.send(command);
@@ -233,7 +230,6 @@ const checkAdmin = (userId) => {
                 }
             }
         } catch (err) {
-            // console.log(err);
             rej(err.message);
         }
     });
@@ -254,7 +250,6 @@ const getDataConfigFromS3 = async () => {
         return jsonData;
 
     } catch (e) {
-        // console.log("catch",e)
         return {};
     }
 };

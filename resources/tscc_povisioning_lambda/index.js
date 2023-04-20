@@ -39,13 +39,11 @@ const saveDataToS3 = async (data) => {
         Body: buf,
         ContentEncoding: "utf-8",
         ContentType: "application/json",
-        // ACL: 'public-read'
     };
 
     return new Promise((res, rej) => {
         s3.upload(bucketData, function (err, data) {
             if (err) {
-                // console.log(err);
                 rej("Error uploading data: ", data);
             } else {
                 res("succesfully uploaded!!!");
@@ -66,7 +64,6 @@ const getDataConfigFromS3 = async () => {
             .promise();
 
         data = data.Body.toString("utf-8");
-        // data = JSON.parse(data)
 
         return JSON.parse(data);
     } catch (e) {
@@ -86,13 +83,11 @@ const saveDataConfigToS3 = async (data) => {
         Body: buf,
         ContentEncoding: "utf-8",
         ContentType: "application/json",
-        // ACL: 'public-read'
     };
 
     return new Promise((res, rej) => {
         s3.upload(bucketData, function (err, data) {
             if (err) {
-                // console.log(err);
                 rej("Error uploading data: ", data);
             } else {
                 res("succesfully uploaded!!!");
@@ -113,7 +108,6 @@ const getDataFromS3 = async () => {
             .promise();
 
         data = data.Body.toString("utf-8");
-        // data = JSON.parse(data)
 
         return JSON.parse(data);
     } catch (e) {
