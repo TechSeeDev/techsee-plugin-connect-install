@@ -5,7 +5,6 @@ import { SaveConfigStack } from "../lib/save-config-stack";
 import { WepAppStack } from "../lib/web-app-stack";
 import ResourceName from "../lib/constants";
 import { SsoStack } from "../lib/sso-stack";
-import { S3ToCloudFrontStack } from "../lib/s3-cloudFront-stack";
 import { S3RestApiStack } from "../lib/api-with-s3";
 
 const app = new cdk.App();
